@@ -5,6 +5,8 @@
 # Wymagania aplikacji
 ## Klient
 - Z kontem Klienta ściśle powiązany jest jeden Koszyk (Koszyk nie istnieje bez klienta).
+- Klient łączy się zdalnie z serwerem.
+- Klient ma możliwość zalogowania się.
 - Klient może składać zamówienia.
 - Klient może posiadać wiele kuponów rabatowych (lub nie mieć żadnego).
 ## Katalog i produkty
@@ -16,10 +18,12 @@
 - Po zatwierdzeniu koszyka powstaje Zamówienie, które również zawiera wybrane Produkty.
 - Zamówienie ma typ dostawy (atrybut typDostawy: String).
 ## Magazyn
-- Magazyn przechowuje wiele produktów
+- Magazyn przechowuje wiele produktów.
+- Magazyn znajduje się na zdalnym serwerze.
 ## Kupon rabatowy
 - Kupon rabatowy obniża cenę konkretnych Produktów.
 - Jeden kupon może dotyczyć wielu produktów.
+- Serwer weryfikuje poprawność kuponu.
 # Przykładowy przebieg procesu zakupowego
 Klient -> Przegląda Katalog -> Wybiera Produkt z Kategorii -> Dodaje Produkt do Koszyka -> Przechodzi do okna zamówienia -> Aplikuje Kupon rabatowy (opcjonalnie) -> Składa zamówienie (wybiera typDostawy) -> Aktualizacja stanu w Magazynie.
 # Odnośniki do źródeł
