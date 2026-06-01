@@ -14,4 +14,3 @@
 
 ## Priorytet niski
 - Zaprogramowanie algorytmu, który obniża cenę końcową po użyciu Kuponu.
-- Zaimplementowanie podziału produktow na Kategorie.
