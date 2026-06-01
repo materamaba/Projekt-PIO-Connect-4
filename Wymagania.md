@@ -9,7 +9,7 @@
 - Klient może posiadać wiele kuponów rabatowych (lub nie mieć żadnego).
 ## Katalog i produkty
 - Katalog składa się z wielu Produktów.
-- Produkty mają Kategorie (kategoria może mieć wiele produktów, produkt należy do kategorii).
+- Produkty mają Kategorie.
 - Produkt posiada określoną cenę (atrybut cena: float).
 ## Koszyk i Zamówienie
 - Koszyk może zawierać wiele Produktów.
