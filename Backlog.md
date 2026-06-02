@@ -1,16 +1,11 @@
 # Backlog
 
 ## Najwiekszy priorytet
-- Utworzenie struktury głównych elementów: Produkt, Klient, Kategoria, Magazyn.
-- Zaimplementowanie profilu Klienta.
-- Stworzenie Katalogu umożliwiającego wyświetlanie Produktów oraz ich cen. 
-- Utworzenie wirtualnego Koszyka i powiązanie go z kontem danego Klienta.
+- Utworzenie struktury sieciowej: Klient Serwer.
+- Utworzenie klasy Gracz.
+- Utworzenie logiki gry oraz klas z tym powiazanych: Rozgrywka Plansza Krażek. 
 
-##  Priorytet posredni
-- Stworzenie mechanizmu zarządzania Koszykiem.
-- Zaimplementowanie procesu składania Zamówienia
-- Zbudowanie modułu Kuponów rabatowych.
-- Zaimplementowanie aktualizacji stanów magazynowych po udanej transakcji.
-
-## Priorytet niski
-- Zaprogramowanie algorytmu, który obniża cenę końcową po użyciu Kuponu.
+##  Mniejszy priorytet
+- Utworzenie klasy Bot:
+- Utworzenie widoku gry za pomoca JavaFX.
+- Utworzenie klasy menu oraz wykonanie gui dla niego.
