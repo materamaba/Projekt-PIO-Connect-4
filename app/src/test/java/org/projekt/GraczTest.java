@@ -38,4 +38,20 @@ public class GraczTest {
             fail("There should be no exceptions here");
         }
     }
+
+    @Test
+    void yellowTeamCantStartGameTest() {
+        try{
+            Gracz player2 = new Gracz(Zespol.YELLOW);
+            Rozgrywka game = new Rozgrywka();
+
+            player2.playerMakeMove(game, 0); //this shouldnt do anything
+
+            if(game.checkDisk(5, 0, 2) != 0){
+                fail("Only red team can start game");
+            }
+        }catch(Exception e){
+            fail("There should be no exceptions here");
+        }
+    }
 }
