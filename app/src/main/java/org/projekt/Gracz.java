@@ -7,6 +7,14 @@ public class Gracz {
         this.team = team;
     }
 
+    public void playerMakeMove(Rozgrywka rozgrywka, int col) throws Exception {
+        if((rozgrywka.getNextPlayer() == 1 && team == Zespol.YELLOW) || (rozgrywka.getNextPlayer() == 2 && team == Zespol.RED)){
+            return;
+        }
+
+        rozgrywka.makeMove(col);
+    }
+
     public Zespol getTeam() {
         return team;
     }
