@@ -1,6 +1,13 @@
 package org.projekt;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -26,4 +33,20 @@ public class KlientTest {
             // this test should throw exception
         }
     }
+
+    /*
+    @Test
+    void connectToServerTest() {
+        try{
+            Klient client = new Klient();
+            try(ServerSocket serverSocket = new ServerSocket(0)){
+
+                client.connectToServer("localhost",1234);
+            }catch (Exception e){
+                fail("Client should connect to server");
+            }
+        }catch(Exception e){
+            fail("Client constructor error");
+        }
+    }*/
 }

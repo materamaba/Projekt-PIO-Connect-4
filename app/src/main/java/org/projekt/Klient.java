@@ -22,7 +22,10 @@ public class Klient extends Application {
 
         try {
             socket = new Socket(ipAddress, port);
+
             out = new ObjectOutputStream(socket.getOutputStream());
+            out.flush();
+
             in = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             throw new Exception("Cant connect to server");
