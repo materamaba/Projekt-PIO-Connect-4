@@ -66,7 +66,7 @@ public class RozgrywkaTest {
         result = game.makeMove(2);
         result = game.makeMove(3);
         result = game.makeMove(3);
-        result = game.makeMove(4);
+        result = game.makeMove(6);
         result = game.makeMove(3);
         if(result != 1){
             fail("Player 1 should win");
