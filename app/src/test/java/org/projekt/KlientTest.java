@@ -15,4 +15,15 @@ public class KlientTest {
             // this test should throw exception
         }
     }
+
+    @Test
+    void connectToBadIPAddressTest() {
+        try{
+            Klient client = new Klient();
+            client.connectToServer("badIP", 1234);
+            fail("Client should ip address");
+        }catch(Exception e){
+            // this test should throw exception
+        }
+    }
 }

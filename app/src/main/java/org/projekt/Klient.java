@@ -19,6 +19,14 @@ public class Klient extends Application {
         if(port < 0 || port > 65535){
             throw new Exception("Bad port");
         }
+
+        try {
+            socket = new Socket(ipAddress, port);
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
+        } catch (IOException e) {
+            throw new Exception("Cant connect to server");
+        }
     }
 
     @Override
