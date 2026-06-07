@@ -3,20 +3,25 @@ package org.projekt;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.sql.ClientInfoStatus;
 
 public class Klient extends Application {
     private Rozgrywka gameToDisplay;
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
+
+    private GridPane gridPane;
+    private Circle[][] circles = new Circle[6][7];
 
     public void connectToServer(String ipAddress, int port) throws Exception {
         if(port < 0 || port > 65535){
@@ -46,18 +51,12 @@ public class Klient extends Application {
             while (true){
                 try{
                     gameToDisplay = (Rozgrywka) in.readObject();
+
+
                 }catch(Exception e){
                     System.out.println("Server disconnected");
                     break;
                 }
-            }
-        }).start();
-    }
-
-    private void startGameDisplayThread(){
-        new Thread(() -> {
-            while (true){
-
             }
         }).start();
     }
@@ -74,7 +73,6 @@ public class Klient extends Application {
             waitForServerToStartGame();
 
             startClientAndServerCommunicationThread();
-            startGameDisplayThread();
         }).start();
     }
 
@@ -86,6 +84,8 @@ public class Klient extends Application {
             System.exit(0);
         });
 
+        initDisplayedBoard();
+
         initClientLogic();
 
         StackPane stackPane = new StackPane();
@@ -93,6 +93,34 @@ public class Klient extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private void initDisplayedBoard() {
+        gridPane = new GridPane();
+        gridPane.setStyle("-fx-background-color: #0044AA; -fx-padding: 15;");
+        gridPane.setHgap(12);
+        gridPane.setVgap(12);
+
+        for (int row = 0; row < 7; row++) {
+            for (int col = 0; col < 6; col++) {
+                Circle circle = new Circle(30);
+                circle.setFill(Color.WHITE);
+                circles[row][col] = circle;
+
+                gridPane.add(circle, col, row);
+
+                final int currentColumn = col;
+                circle.setOnMouseClicked(event -> sendMoveToServer(currentColumn));
+            }
+        }
+    }
+
+    private void sendMoveToServer(int col) {
+        try {
+            //send col to server
+        } catch (Exception e) {
+            System.out.println("Cant send move to server");
+        }
     }
 
     public static void main(String[] args){
