@@ -1,5 +1,5 @@
 # Wymagania projektu
-- Aplikacja będzie działać w terminalu
+- Aplikacja będzie mieć GUI w JavaFX
 - Kod piszemy po Angielsku, a komunikaty po Polsku
 - Kod będzie pisany w języku Java
 # Wymagania aplikacji

@@ -1,6 +1,8 @@
 package org.projekt;
 
-public class Rozgrywka {
+import java.io.Serializable;
+
+public class Rozgrywka implements Serializable {
     private Plansza board = new Plansza();
     private int player = 1;
     private int gameFinished = 0;

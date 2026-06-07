@@ -1,6 +1,8 @@
 package org.projekt;
 
-public class Plansza {
+import java.io.Serializable;
+
+public class Plansza implements Serializable {
     private Krażek[][] grid = new Krażek[6][7];
 
     public void insert(int col, int playerID) throws Exception{
