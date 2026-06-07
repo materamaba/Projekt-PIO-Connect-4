@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -38,27 +37,35 @@ public class Klient extends Application {
         }
     }
 
-    private void waitForServerToStartGame(){
-        try{
-            in.readObject();
-        }catch(Exception e){
-            System.out.println("Server disconnected");
-        }
-    }
-
     private void startClientAndServerCommunicationThread(){
         new Thread(() -> {
             while (true){
                 try{
                     gameToDisplay = (Rozgrywka) in.readObject();
 
-
+                    Platform.runLater(this::updateDisplayedBoard);
                 }catch(Exception e){
                     System.out.println("Server disconnected");
                     break;
                 }
             }
         }).start();
+    }
+
+    private void updateDisplayedBoard() {
+        if (gameToDisplay == null) return;
+
+        for (int row = 0; row < 6; row++) {
+            for (int col = 0; col < 7; col++) {
+                if (gameToDisplay.checkDisk(row, col, 1) == 1) {
+                    circles[row][col].setFill(Color.RED);
+                } else if (gameToDisplay.checkDisk(row, col, 2) == 1) {
+                    circles[row][col].setFill(Color.YELLOW);
+                } else {
+                    circles[row][col].setFill(Color.WHITE);
+                }
+            }
+        }
     }
 
     private void initClientLogic(){
@@ -69,8 +76,6 @@ public class Klient extends Application {
                 System.out.println("Cant connect to server");
                 System.exit(0);
             }
-
-            waitForServerToStartGame();
 
             startClientAndServerCommunicationThread();
         }).start();
@@ -88,10 +93,9 @@ public class Klient extends Application {
 
         initClientLogic();
 
-        StackPane stackPane = new StackPane();
-        Scene scene = new Scene(stackPane, 300, 250);
-
+        Scene scene = new Scene(gridPane, 530, 460);
         primaryStage.setScene(scene);
+
         primaryStage.show();
     }
 
@@ -101,8 +105,8 @@ public class Klient extends Application {
         gridPane.setHgap(12);
         gridPane.setVgap(12);
 
-        for (int row = 0; row < 7; row++) {
-            for (int col = 0; col < 6; col++) {
+        for (int row = 0; row < 6; row++) {
+            for (int col = 0; col < 7; col++) {
                 Circle circle = new Circle(30);
                 circle.setFill(Color.WHITE);
                 circles[row][col] = circle;
@@ -117,7 +121,8 @@ public class Klient extends Application {
 
     private void sendMoveToServer(int col) {
         try {
-            //send col to server
+            out.writeObject(col);
+            out.flush();
         } catch (Exception e) {
             System.out.println("Cant send move to server");
         }
