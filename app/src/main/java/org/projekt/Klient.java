@@ -43,17 +43,38 @@ public class Klient extends Application {
 
     private void startClientAndServerCommunicationThread(){
         new Thread(() -> {
-            try{
-                gameToDisplay = (Rozgrywka) in.readObject();
-            }catch(Exception e){
-                System.out.println("Server disconnected");
+            while (true){
+                try{
+                    gameToDisplay = (Rozgrywka) in.readObject();
+                }catch(Exception e){
+                    System.out.println("Server disconnected");
+                    break;
+                }
             }
         }).start();
     }
 
     private void startGameDisplayThread(){
         new Thread(() -> {
+            while (true){
 
+            }
+        }).start();
+    }
+
+    private void initClientLogic(){
+        new Thread(() -> {
+            try {
+                connectToServer("localhost", 1234);
+            }catch(Exception e){
+                System.out.println("Cant connect to server");
+                System.exit(0);
+            }
+
+            waitForServerToStartGame();
+
+            startClientAndServerCommunicationThread();
+            startGameDisplayThread();
         }).start();
     }
 
@@ -65,6 +86,8 @@ public class Klient extends Application {
             System.exit(0);
         });
 
+        initClientLogic();
+
         StackPane stackPane = new StackPane();
         Scene scene = new Scene(stackPane, 300, 250);
 
@@ -73,20 +96,6 @@ public class Klient extends Application {
     }
 
     public static void main(String[] args){
-        Klient client = new Klient();
-
-        try {
-            client.connectToServer("localhost", 1234);
-        }catch(Exception e){
-            System.out.println("Cant connect to server");
-            System.exit(0);
-        }
-
-        client.waitForServerToStartGame();
-
-        client.startClientAndServerCommunicationThread();
-        client.startGameDisplayThread();
-
         launch(args);
     }
 }

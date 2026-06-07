@@ -1,6 +1,8 @@
 package org.projekt;
 
-public class Krażek {
+import java.io.Serializable;
+
+public class Krażek implements Serializable {
         private int PlayerId;
     public Krażek(int PlayerId) throws Exception{
         if(PlayerId != 1 && PlayerId != 2){
