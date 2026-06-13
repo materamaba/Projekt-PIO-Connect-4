@@ -57,5 +57,26 @@ public class KlientTest {
             fail("The method should handle null as onError, but it threw an exception: " + e.getMessage());
         }
     }
-    
+
+    @Test
+    @Timeout(value = 2, unit = TimeUnit.SECONDS)
+    void connectToValidServerTest() {
+        try (ServerSocket server = new ServerSocket(0)) {
+            int activePort = server.getLocalPort();
+            new Thread(() -> {
+                try (Socket clientSocket = server.accept();
+                     ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
+                     ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream())) {
+                } catch (Exception e) {
+                }
+            }).start();
+
+            Klient client = new Klient();
+            client.connectToServer("localhost", activePort);
+            client.disconnect();
+
+        } catch (Exception e) {
+            fail("Client should connect to server");
+        }
+    }
 }
