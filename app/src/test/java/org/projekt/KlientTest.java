@@ -33,22 +33,6 @@ public class KlientTest {
             // this test should throw exception
         }
     }
-
-    /*
-    @Test
-    void connectToServerTest() {
-        try{
-            Klient client = new Klient();
-            try(ServerSocket serverSocket = new ServerSocket(0)){
-
-                client.connectToServer("localhost",1234);
-            }catch (Exception e){
-                fail("Client should connect to server");
-            }
-        }catch(Exception e){
-            fail("Client constructor error");
-        }
-    }*/
     
     @Test
     public void testDisconnect() {
@@ -73,5 +57,26 @@ public class KlientTest {
             fail("The method should handle null as onError, but it threw an exception: " + e.getMessage());
         }
     }
-    
+
+    @Test
+    @Timeout(value = 2, unit = TimeUnit.SECONDS)
+    void connectToValidServerTest() {
+        try (ServerSocket server = new ServerSocket(0)) {
+            int activePort = server.getLocalPort();
+            new Thread(() -> {
+                try (Socket clientSocket = server.accept();
+                     ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
+                     ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream())) {
+                } catch (Exception e) {
+                }
+            }).start();
+
+            Klient client = new Klient();
+            client.connectToServer("localhost", activePort);
+            client.disconnect();
+
+        } catch (Exception e) {
+            fail("Client should connect to server");
+        }
+    }
 }

@@ -14,7 +14,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class Klient extends Application {
-    private Rozgrywka gameToDisplay;
+    private Rozgrywka gameFromServer;
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
@@ -23,6 +23,8 @@ public class Klient extends Application {
     private Circle[][] circles = new Circle[6][7];
     private Stage stage;
     private Scene gameScene;
+
+    private Gracz player = new Gracz();
     
     public void connectToServer(String ipAddress, int port) throws Exception {
         if(port < 0 || port > 65535){
@@ -43,7 +45,7 @@ public class Klient extends Application {
         new Thread(() -> {
             while (true){
                 try{
-                    gameToDisplay = (Rozgrywka) in.readObject();
+                    gameFromServer = (Rozgrywka) in.readObject();
 
                     Platform.runLater(this::updateDisplayedBoard);
                 }catch(Exception e){
@@ -55,21 +57,33 @@ public class Klient extends Application {
     }
 
     private void updateDisplayedBoard() {
-        if (gameToDisplay == null) return;
+        if (gameFromServer == null) return;
         if (stage != null && stage.getScene() != gameScene) {
             stage.setScene(gameScene);
         }
         for (int row = 0; row < 6; row++) {
             for (int col = 0; col < 7; col++) {
-                if (gameToDisplay.checkDisk(row, col, 1) == 1) {
+                if (gameFromServer.checkDisk(row, col, 1) == 1) {
                     circles[row][col].setFill(Color.RED);
-                } else if (gameToDisplay.checkDisk(row, col, 2) == 1) {
+                } else if (gameFromServer.checkDisk(row, col, 2) == 1) {
                     circles[row][col].setFill(Color.YELLOW);
                 } else {
                     circles[row][col].setFill(Color.WHITE);
                 }
             }
         }
+
+        if (gameFromServer.isGameFinished() == 1) {
+            handleGameOver();
+        }
+    }
+
+    private void handleGameOver() {
+        //tutaj wyswietl alert z wynikiem gry
+
+        disconnect();
+        gameFromServer = null;
+        new Menu(stage, this).showMainMenu();
     }
 
     public void initClientLogic(String ip, int port, Runnable onError) {
@@ -124,7 +138,11 @@ public class Klient extends Application {
                 gridPane.add(circle, col, row);
 
                 final int currentColumn = col;
-                circle.setOnMouseClicked(event -> sendMoveToServer(currentColumn));
+                circle.setOnMouseClicked(event -> {
+                    if(player.canPlayerMakeMove(gameFromServer)){
+                        sendMoveToServer(currentColumn);
+                    }
+                });
             }
         }
     }
@@ -136,6 +154,10 @@ public class Klient extends Application {
         } catch (Exception e) {
             System.out.println("Cant send move to server");
         }
+    }
+
+    public void setPlayersTeam(Zespol team) {
+        player.setTeam(team);
     }
 
     public static void main(String[] args){

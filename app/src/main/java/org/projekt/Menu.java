@@ -6,6 +6,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.net.InetAddress;
 
 public class Menu {
@@ -34,7 +36,10 @@ public class Menu {
 		multiplayerButton.setStyle("-fx-font-size: 16px;");
 		botButton.setStyle("-fx-font-size: 16px;");
 		multiplayerButton.setOnAction(e -> showMultiplayerMenu());
-		botButton.setOnAction(e -> handleBotGame());
+		botButton.setOnAction(e -> {
+			handleBotGame();
+			clientEntity.setPlayersTeam(Zespol.RED);
+		});
 		VBox layout = new VBox(20, title, multiplayerButton, botButton);
 		style(layout);
 		stage.setScene(new Scene(layout, 400, 400));
@@ -52,12 +57,32 @@ public class Menu {
 		hostButton.setStyle("-fx-font-size: 16px;");
 		joinButton.setStyle("-fx-font-size: 16px;");
 		backButton.setStyle("-fx-font-size: 16px;");
-		hostButton.setOnAction(e -> startServerAndGoToHostMenu());
-		joinButton.setOnAction(e -> showJoinMenu());
+		hostButton.setOnAction(e -> {
+			if (isServerIsAlreadyStarted()){
+				clientEntity.setPlayersTeam(Zespol.YELLOW);
+				clientEntity.initClientLogic("localhost", 1234, null);
+			}else{
+				clientEntity.setPlayersTeam(Zespol.RED);
+				startServerAndGoToHostMenu();
+			}
+		});
+		joinButton.setOnAction(e -> {
+			showJoinMenu();
+			clientEntity.setPlayersTeam(Zespol.YELLOW);
+		});
 		backButton.setOnAction(e -> showMainMenu());
 		VBox layout = new VBox(20, title, hostButton, joinButton, backButton);
 		style(layout);
 		stage.setScene(new Scene(layout, 400, 400));
+	}
+
+	private boolean isServerIsAlreadyStarted() {
+		try{
+			new java.net.ServerSocket(1234).close();
+			return false;
+		}catch(Exception e){
+			return true;
+		}
 	}
 
 	private void showHostMenu() {

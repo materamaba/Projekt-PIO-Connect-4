@@ -112,4 +112,7 @@ public class Rozgrywka implements Serializable {
     public int getNextPlayer(){
         return player;
     }
+    public int isGameFinished() {
+        return gameFinished;
+    }
 }
