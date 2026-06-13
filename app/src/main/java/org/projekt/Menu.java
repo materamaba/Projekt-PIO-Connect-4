@@ -6,6 +6,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.net.InetAddress;
 
 public class Menu {
@@ -56,8 +58,13 @@ public class Menu {
 		joinButton.setStyle("-fx-font-size: 16px;");
 		backButton.setStyle("-fx-font-size: 16px;");
 		hostButton.setOnAction(e -> {
-			startServerAndGoToHostMenu();
-			clientEntity.setPlayersTeam(Zespol.RED);
+			if (isServerIsAlreadyStarted()){
+				clientEntity.setPlayersTeam(Zespol.YELLOW);
+				clientEntity.initClientLogic("localhost", 1234, null);
+			}else{
+				clientEntity.setPlayersTeam(Zespol.RED);
+				startServerAndGoToHostMenu();
+			}
 		});
 		joinButton.setOnAction(e -> {
 			showJoinMenu();
@@ -67,6 +74,15 @@ public class Menu {
 		VBox layout = new VBox(20, title, hostButton, joinButton, backButton);
 		style(layout);
 		stage.setScene(new Scene(layout, 400, 400));
+	}
+
+	private boolean isServerIsAlreadyStarted() {
+		try{
+			new java.net.ServerSocket(1234).close();
+			return false;
+		}catch(Exception e){
+			return true;
+		}
 	}
 
 	private void showHostMenu() {
