@@ -94,6 +94,7 @@ public class Rozgrywka implements Serializable {
         return 0;
     }
 
+
     public int checkDiagonalAsc(int player){
           for(int i = 3; i < 6;i++){
             for(int j = 0; j < 4;j++){
