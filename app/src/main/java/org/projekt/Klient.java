@@ -23,6 +23,8 @@ public class Klient extends Application {
     private Circle[][] circles = new Circle[6][7];
     private Stage stage;
     private Scene gameScene;
+
+    private Gracz player;
     
     public void connectToServer(String ipAddress, int port) throws Exception {
         if(port < 0 || port > 65535){

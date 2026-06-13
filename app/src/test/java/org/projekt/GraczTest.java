@@ -54,4 +54,18 @@ public class GraczTest {
             fail("There should be no exceptions here");
         }
     }
+
+    @Test
+    void changeTeamTest() {
+        try{
+            Gracz player = new Gracz(Zespol.YELLOW);
+            player.setTeam(Zespol.RED);
+
+            if(player.getTeam() != Zespol.RED){
+                fail("Player's team should be red");
+            }
+        }catch(Exception e){
+            fail("There should be no exceptions here");
+        }
+    }
 }
