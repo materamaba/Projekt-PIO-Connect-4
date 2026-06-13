@@ -27,9 +27,8 @@ public class Rozgrywka implements Serializable {
         if(gameFinished == 1){
             if(player == 1){
                 return 1;
-            }else{
-                return 2;
             }
+            return 2;
         }
         if(player == 1){
             player = 2;

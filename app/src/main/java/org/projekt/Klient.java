@@ -21,7 +21,9 @@ public class Klient extends Application {
 
     private GridPane gridPane;
     private Circle[][] circles = new Circle[6][7];
-
+    private Stage stage;
+    private Scene gameScene;
+    
     public void connectToServer(String ipAddress, int port) throws Exception {
         if(port < 0 || port > 65535){
             throw new Exception("Bad port");
@@ -54,7 +56,9 @@ public class Klient extends Application {
 
     private void updateDisplayedBoard() {
         if (gameToDisplay == null) return;
-
+        if (stage != null && stage.getScene() != gameScene) {
+            stage.setScene(gameScene);
+        }
         for (int row = 0; row < 6; row++) {
             for (int col = 0; col < 7; col++) {
                 if (gameToDisplay.checkDisk(row, col, 1) == 1) {
@@ -68,34 +72,40 @@ public class Klient extends Application {
         }
     }
 
-    private void initClientLogic(){
+    public void initClientLogic(String ip, int port, Runnable onError) {
         new Thread(() -> {
             try {
-                connectToServer("localhost", 1234);
-            }catch(Exception e){
-                System.out.println("Cant connect to server");
-                System.exit(0);
+                connectToServer(ip, port);
+                startClientAndServerCommunicationThread();
+            } catch(Exception e) {
+                if (onError != null) {
+                    Platform.runLater(onError);
+                }
             }
-
-            startClientAndServerCommunicationThread();
         }).start();
+    }
+
+    public void disconnect() {
+        try {
+            if (socket != null && !socket.isClosed()) {
+                socket.close();
+            }
+        } catch (Exception e) {}
     }
 
     @Override
     public void start(Stage primaryStage) {
+    	this.stage = primaryStage;
         primaryStage.setOnCloseRequest(event -> {
             System.out.println("Game window closed");
             Platform.exit();
             System.exit(0);
         });
-
         initDisplayedBoard();
-
-        initClientLogic();
-
-        Scene scene = new Scene(gridPane, 530, 460);
-        primaryStage.setScene(scene);
-
+        gameScene = new Scene(gridPane, 530, 460);
+        new Menu(primaryStage, this);
+        Menu menu = new Menu(primaryStage, this);
+        menu.showMainMenu();
         primaryStage.show();
     }
 

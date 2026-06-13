@@ -49,4 +49,29 @@ public class KlientTest {
             fail("Client constructor error");
         }
     }*/
+    
+    @Test
+    public void testDisconnect() {
+        Klient klient = new Klient();
+        
+        try {
+            klient.disconnect();
+        } catch (Exception e) {
+            fail("Disconnect caused an unexpected error: " + e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testNullInsteadOnError() {
+        Klient klient = new Klient();
+        
+        try {
+            klient.initClientLogic("127.0.0.1", 1234, null);
+            Thread.sleep(300);
+            
+        } catch (Exception e) {
+            fail("The method should handle null as onError, but it threw an exception: " + e.getMessage());
+        }
+    }
+    
 }

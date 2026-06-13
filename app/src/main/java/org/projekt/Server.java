@@ -107,4 +107,13 @@ public class Server {
             System.out.println("Nieprawidłowy ruch: " + error.getMessage());
         }
     }
+    
+    public void stopServer() {
+        try {
+            if (serverSocket != null && !serverSocket.isClosed()) {
+                serverSocket.close();
+            }
+        } catch (IOException e) {
+        }
+    }
 }

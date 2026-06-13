@@ -1,10 +1,10 @@
 package org.projekt;
-
 import java.io.Serializable;
 
 public class Plansza implements Serializable {
-    private Krażek[][] grid = new Krażek[6][7];
-
+	public static final int WIDTH = 7;
+	public static final int HIGHT = 6;
+    private Krażek[][] grid = new Krażek[HIGHT][WIDTH];
     public void insert(int col, int playerID) throws Exception{
         if(col < 0 || col > 6){
             throw new Exception("Invalid column");
