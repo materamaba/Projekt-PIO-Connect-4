@@ -33,22 +33,6 @@ public class KlientTest {
             // this test should throw exception
         }
     }
-
-    /*
-    @Test
-    void connectToServerTest() {
-        try{
-            Klient client = new Klient();
-            try(ServerSocket serverSocket = new ServerSocket(0)){
-
-                client.connectToServer("localhost",1234);
-            }catch (Exception e){
-                fail("Client should connect to server");
-            }
-        }catch(Exception e){
-            fail("Client constructor error");
-        }
-    }*/
     
     @Test
     public void testDisconnect() {

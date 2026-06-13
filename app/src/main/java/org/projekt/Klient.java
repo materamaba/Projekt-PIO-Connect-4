@@ -72,6 +72,18 @@ public class Klient extends Application {
                 }
             }
         }
+
+        if (gameFromServer.isGameFinished() == 1) {
+            handleGameOver();
+        }
+    }
+
+    private void handleGameOver() {
+        //tutaj wyswietl alert z wynikiem gry
+
+        disconnect();
+        gameFromServer = null;
+        new Menu(stage, this).showMainMenu();
     }
 
     public void initClientLogic(String ip, int port, Runnable onError) {
