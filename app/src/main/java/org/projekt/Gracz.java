@@ -9,11 +9,15 @@ public class Gracz {
     public Gracz(){}
 
     public void playerMakeMove(Rozgrywka rozgrywka, int col) throws Exception {
-        if((rozgrywka.getNextPlayer() == 1 && team == Zespol.YELLOW) || (rozgrywka.getNextPlayer() == 2 && team == Zespol.RED)){
+        if(!canPlayerMakeMove(rozgrywka)){
             return;
         }
 
         rozgrywka.makeMove(col);
+    }
+
+    public boolean canPlayerMakeMove(Rozgrywka rozgrywka) {
+        return !((rozgrywka.getNextPlayer() == 1 && team == Zespol.YELLOW) || (rozgrywka.getNextPlayer() == 2 && team == Zespol.RED));
     }
 
     public void setTeam(Zespol team){
