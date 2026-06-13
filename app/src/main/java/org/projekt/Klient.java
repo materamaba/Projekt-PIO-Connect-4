@@ -24,7 +24,7 @@ public class Klient extends Application {
     private Stage stage;
     private Scene gameScene;
 
-    private Gracz player;
+    private Gracz player = new Gracz();
     
     public void connectToServer(String ipAddress, int port) throws Exception {
         if(port < 0 || port > 65535){
@@ -138,6 +138,10 @@ public class Klient extends Application {
         } catch (Exception e) {
             System.out.println("Cant send move to server");
         }
+    }
+
+    public void setPlayersTeam(Zespol team) {
+        player.setTeam(team);
     }
 
     public static void main(String[] args){
