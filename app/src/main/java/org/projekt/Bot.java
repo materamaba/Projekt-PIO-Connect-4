@@ -176,7 +176,7 @@ public class Bot {
             try {
                 Rozgrywka game = (Rozgrywka) in.readObject();
                 
-                if (game.isGameFinished() == 1) {
+                if (game.isGameFinished() != 0) {
                     System.out.println("Game finished. Bot disconnecting.");
                     try {
                         Thread.sleep(500); 
