@@ -99,6 +99,54 @@ public class Bot {
         return -1; 
     }
 
+    int checkTrioInDiag(Game game, int playerId) {
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 4; col++) {
+                int playerDisks = 0;
+                int emptyCells = 0;
+                int targetCol = -1;
+                int targetRow = -1;
+                for (int i = 0; i < 4; i++) {
+                    int currentRow = row + i;
+                    int currentCol = col + i;
+                    if (game.checkDisk(currentRow, currentCol, playerId) == 1) {
+                        playerDisks++;
+                    }
+                    else if (game.checkDisk(currentRow, currentCol, 1) == 0 && game.checkDisk(currentRow, currentCol, 2) == 0) {
+                        emptyCells++; targetRow = currentRow; targetCol = currentCol;
+                    }
+                }
+                if (playerDisks == 3 && emptyCells == 1 && getDropRow(game, targetCol) == targetRow) {
+                    return targetCol;
+                }
+            }
+        }
+        for (int row = 3; row < 6; row++) {
+            for (int col = 0; col < 4; col++) {
+                int playerDisks = 0;
+                int emptyCells = 0;
+                int targetCol = -1;
+                int targetRow = -1;
+                for (int i = 0; i < 4; i++) {
+                    int currentRow = row - i;
+                    int currentCol = col + i;
+                    if (game.checkDisk(currentRow, currentCol, playerId) == 1){
+                        playerDisks++;
+                    }
+                    else if (game.checkDisk(currentRow, currentCol, 1) == 0 && game.checkDisk(currentRow, currentCol, 2) == 0) {
+                        emptyCells++; targetRow = currentRow;
+                        targetCol = currentCol;
+                    }
+                }
+                if (playerDisks == 3 && emptyCells == 1 && getDropRow(game, targetCol) == targetRow){
+                    return targetCol;
+                }
+            }
+        }
+        return -1;
+    }
+
+
     int checkPairInRow(Game game, int playerId) {
         for (int row = 0; row < 6; row++) {
             for (int startCol = 0; startCol < 4; startCol++) {
@@ -164,6 +212,74 @@ public class Bot {
         return -1; 
     }
 
+    int checkPairInDiag(Game game, int playerId) {
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 4; col++) {
+                int playerDisks = 0;
+                int emptyCells = 0;
+                int[] emptyCols = new int[2];
+                int[] emptyRows = new int[2];
+                int emptyIndex = 0;
+                for (int i = 0; i < 4; i++) {
+                    int currentRow = row + i;
+                    int currentCol = col + i;
+                    if (game.checkDisk(currentRow, currentCol, playerId) == 1){
+                        playerDisks++;
+                    }
+                    else if (game.checkDisk(currentRow, currentCol, 1) == 0 && game.checkDisk(currentRow, currentCol, 2) == 0) {
+                        emptyCells++;
+                        if (emptyIndex < 2) {
+                            emptyCols[emptyIndex] = currentCol;
+                            emptyRows[emptyIndex] = currentRow;
+                            emptyIndex++;
+                        }
+                    }
+                }
+                if (playerDisks == 2 && emptyCells == 2) {
+                    if (getDropRow(game, emptyCols[0]) == emptyRows[0]){
+                        return emptyCols[0];
+                    }
+                    if (getDropRow(game, emptyCols[1]) == emptyRows[1]){
+                        return emptyCols[1];
+                    }
+                }
+            }
+        }
+        for (int row = 3; row < 6; row++) {
+            for (int col = 0; col < 4; col++) {
+                int playerDisks = 0;
+                int emptyCells = 0;
+                int[] emptyCols = new int[2];
+                int[] emptyRows = new int[2];
+                int emptyIndex = 0;
+                for (int i = 0; i < 4; i++) {
+                    int currentRow = row - i;
+                    int currentCol = col + i;
+                    if (game.checkDisk(currentRow, currentCol, playerId) == 1) {
+                        playerDisks++;
+                    }
+                    else if (game.checkDisk(currentRow, currentCol, 1) == 0 && game.checkDisk(currentRow, currentCol, 2) == 0) {
+                        emptyCells++;
+                        if (emptyIndex < 2) {
+                            emptyCols[emptyIndex] = currentCol;
+                            emptyRows[emptyIndex] = currentRow;
+                            emptyIndex++;
+                        }
+                    }
+                }
+                if (playerDisks == 2 && emptyCells == 2) {
+                    if (getDropRow(game, emptyCols[0]) == emptyRows[0]){
+                        return emptyCols[0];
+                    }
+                    if (getDropRow(game, emptyCols[1]) == emptyRows[1]){
+                        return emptyCols[1];
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
    
     private void sendMove(int col) throws Exception {
         Thread.sleep(500); 
@@ -196,16 +312,25 @@ public class Bot {
                     selectedCol = checkTrioInCol(game, botID);
                     if (selectedCol != -1) { sendMove(selectedCol); continue; }
 
+                    selectedCol = checkTrioInDiag(game, botID);
+                    if (selectedCol != -1) { sendMove(selectedCol); continue; }
+
                     selectedCol = checkTrioInRow(game, humanID);
                     if (selectedCol != -1) { sendMove(selectedCol); continue; }
 
                     selectedCol = checkTrioInCol(game, humanID);
                     if (selectedCol != -1) { sendMove(selectedCol); continue; }
 
+                    selectedCol = checkTrioInDiag(game, humanID);
+                    if (selectedCol != -1) { sendMove(selectedCol); continue; }
+
                     selectedCol = checkPairInCol(game, botID);
                     if (selectedCol != -1) { sendMove(selectedCol); continue; }
                     
                     selectedCol = checkPairInRow(game, botID);
+                    if (selectedCol != -1) { sendMove(selectedCol); continue; }
+
+                    selectedCol = checkPairInDiag(game, botID);
                     if (selectedCol != -1) { sendMove(selectedCol); continue; }
                     
                     do {
@@ -214,6 +339,7 @@ public class Bot {
                     
                     sendMove(selectedCol);
                 }
+
             
             } catch (Exception e) {
                 System.out.println("Rozłączono z serwerem lub gra się skończyła.");
