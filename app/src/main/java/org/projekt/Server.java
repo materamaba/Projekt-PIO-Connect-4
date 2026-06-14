@@ -78,6 +78,7 @@ public class Server {
             }
             catch (IOException | ClassNotFoundException error) {
                 System.out.println("Gra przerwana! Jeden z graczy się rozłączył.");
+                stopServer();
                 break;
             }
         }
@@ -113,7 +114,9 @@ public class Server {
             if (serverSocket != null && !serverSocket.isClosed()) {
                 serverSocket.close();
             }
-        } catch (IOException e) {
+            if (socket1 != null && !socket1.isClosed()) socket1.close();
+            if (socket2 != null && !socket2.isClosed()) socket2.close();
+        } catch (IOException error) {
         }
     }
 }
