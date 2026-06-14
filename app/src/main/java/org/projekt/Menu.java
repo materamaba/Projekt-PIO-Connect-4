@@ -1,4 +1,6 @@
 package org.projekt;
+import java.net.InetAddress;
+
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -6,9 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.net.InetAddress;
 
 public class Menu {
 	private final Stage stage;
@@ -163,8 +162,35 @@ public class Menu {
 	}
 
 	private void handleBotGame() {
-		// nie ma jeszcze bota
-	}
+        if (activeServer != null) {
+            activeServer.stopServer(); 
+        }
+        clientEntity.disconnect();
+
+        activeServer = new Server();
+        new Thread(() -> {
+            activeServer.startServer();
+        }).start();
+        
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
+        clientEntity.initClientLogic("localhost", 1234, null);
+
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Bot bot = new Bot();
+        new Thread(() -> {
+            bot.start("localhost", 1234);
+        }).start();
+    }
 
 	public String getLocalIpAddress() {
 		try {
