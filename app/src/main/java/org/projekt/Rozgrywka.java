@@ -6,12 +6,14 @@ public class Rozgrywka implements Serializable {
     private Plansza board = new Plansza();
     private int player = 1;
     private int gameFinished = 0;
+    private int moves = 0;
 
     public int makeMove(int col) throws Exception{
         if(gameFinished == 1){
             throw new Exception("Game is finished");
         }
         board.insert(col, player);
+        moves++;
         if(checkHorizontal(player) == 1){
             gameFinished = 1;
         }
@@ -24,12 +26,19 @@ public class Rozgrywka implements Serializable {
         if(checkDiagonalAsc(player) == 1){
             gameFinished = 1;
         }
+        if (moves >= 42) {
+            gameFinished = 2;
+        }
         if(gameFinished == 1){
             if(player == 1){
                 return 1;
             }
             return 2;
         }
+        if(gameFinished == 2){
+            return 3;
+        }
+
         if(player == 1){
             player = 2;
         }else{

@@ -7,6 +7,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.scene.control.Alert;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -50,6 +51,20 @@ public class Klient extends Application {
                     Platform.runLater(this::updateDisplayedBoard);
                 }catch(Exception e){
                     System.out.println("Server disconnected");
+
+                    Platform.runLater(() -> {
+                        if (gameFromServer != null && gameFromServer.isGameFinished() == 0) {
+                            Alert alert = new Alert(Alert.AlertType.WARNING);
+                            alert.setTitle("Przerwana gra");
+                            alert.setHeaderText(null);
+                            alert.setContentText("Przeciwnik się rozłączył!");
+                            alert.showAndWait();
+
+                            disconnect();
+                            gameFromServer = null;
+                            new Menu(stage, Klient.this).showMainMenu();
+                        }
+                    });
                     break;
                 }
             }
@@ -73,13 +88,24 @@ public class Klient extends Application {
             }
         }
 
-        if (gameFromServer.isGameFinished() == 1) {
+        if (gameFromServer.isGameFinished() != 0) {
             handleGameOver();
         }
     }
 
     private void handleGameOver() {
-        //tutaj wyswietl alert z wynikiem gry
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Koniec gry");
+        alert.setHeaderText(null);
+
+        if (gameFromServer.isGameFinished() == 2) {
+            alert.setContentText("Remis!");
+        } else {
+            int winner = gameFromServer.getNextPlayer();
+            alert.setContentText("Wygrał gracz " + winner + "!");
+        }
+
+        alert.showAndWait();
 
         disconnect();
         gameFromServer = null;
