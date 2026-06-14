@@ -1,0 +1,229 @@
+package org.projekt;
+
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
+public class Bot {
+    private Socket socket;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
+    
+    private final int botID = 2;
+    private final int humanID = 1;
+
+    public static void main(String[] args) {
+        Bot bot = new Bot();
+        bot.start("localhost", 1234);
+    }
+
+    public void start(String ip, int port) {
+        try {
+            socket = new Socket(ip, port);
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
+            System.out.println("AI connected.");
+            playLoop();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    int getDropRow(Rozgrywka game, int col) {
+        if (col < 0 || col > 6) {
+            return -1; 
+        }
+        for (int row = 5; row >= 0; row--) {
+            if (game.checkDisk(row, col, 1) == 0 && game.checkDisk(row, col, 2) == 0) {
+                return row; 
+            }
+        }
+        return -1; 
+    }
+
+    int checkTrioInRow(Rozgrywka game, int playerId) {
+        for (int row = 0; row < 6; row++) {
+            for (int startCol = 0; startCol < 4; startCol++) {
+                int playerDisks = 0;
+                int emptyCells = 0;
+                int targetCol = -1;
+
+                for (int i = 0; i < 4; i++) {
+                    int currentCol = startCol + i;
+                    
+                    if (game.checkDisk(row, currentCol, playerId) == 1) {
+                        playerDisks++;
+                    } else if (game.checkDisk(row, currentCol, 1) == 0 && 
+                               game.checkDisk(row, currentCol, 2) == 0) {
+                        emptyCells++;
+                        targetCol = currentCol; 
+                    }
+                }
+
+                if (playerDisks == 3 && emptyCells == 1) {
+                    if (getDropRow(game, targetCol) == row) {
+                        return targetCol; 
+                    }
+                }
+            }
+        }
+        return -1; 
+    }
+
+    int checkTrioInCol(Rozgrywka game, int playerId) {
+        for (int col = 0; col < 7; col++) {
+            for (int startRow = 0; startRow < 3; startRow++) {
+                int playerDisks = 0;
+                int emptyCells = 0;
+                int targetRow = -1;
+
+                for (int i = 0; i < 4; i++) {
+                    int currentRow = startRow + i;
+                    
+                    if (game.checkDisk(currentRow, col, playerId) == 1) {
+                        playerDisks++;
+                    } else if (game.checkDisk(currentRow, col, 1) == 0 && 
+                               game.checkDisk(currentRow, col, 2) == 0) {
+                        emptyCells++;
+                        targetRow = currentRow; 
+                    }
+                }
+
+                if (playerDisks == 3 && emptyCells == 1) {
+                    if (getDropRow(game, col) == targetRow) {
+                        return col; 
+                    }
+                }
+            }
+        }
+        return -1; 
+    }
+
+    int checkPairInRow(Rozgrywka game, int playerId) {
+        for (int row = 0; row < 6; row++) {
+            for (int startCol = 0; startCol < 4; startCol++) {
+                int playerDisks = 0;
+                int emptyCells = 0;
+                int[] emptyCols = new int[2];
+                int emptyIndex = 0;
+
+                for (int i = 0; i < 4; i++) {
+                    int currentCol = startCol + i;
+                    
+                    if (game.checkDisk(row, currentCol, playerId) == 1) {
+                        playerDisks++;
+                    } else if (game.checkDisk(row, currentCol, 1) == 0 && 
+                               game.checkDisk(row, currentCol, 2) == 0) {
+                        emptyCells++;
+                        if (emptyIndex < 2) {
+                            emptyCols[emptyIndex] = currentCol;
+                            emptyIndex++;
+                        }
+                    }
+                }
+
+                if (playerDisks == 2 && emptyCells == 2) {
+                    if (getDropRow(game, emptyCols[0]) == row) {
+                        return emptyCols[0];
+                    }
+                    if (getDropRow(game, emptyCols[1]) == row) {
+                        return emptyCols[1];
+                    }
+                }
+            }
+        }
+        return -1; 
+    }
+
+    int checkPairInCol(Rozgrywka game, int playerId) {
+        for (int col = 0; col < 7; col++) {
+            for (int startRow = 0; startRow < 3; startRow++) {
+                int playerDisks = 0;
+                int emptyCells = 0;
+                int lowestEmptyRow = -1; 
+
+                for (int i = 0; i < 4; i++) {
+                    int currentRow = startRow + i;
+                    
+                    if (game.checkDisk(currentRow, col, playerId) == 1) {
+                        playerDisks++;
+                    } else if (game.checkDisk(currentRow, col, 1) == 0 && 
+                               game.checkDisk(currentRow, col, 2) == 0) {
+                        emptyCells++;
+                        lowestEmptyRow = currentRow;
+                    }
+                }
+
+                if (playerDisks == 2 && emptyCells == 2) {
+                    if (getDropRow(game, col) == lowestEmptyRow) {
+                        return col; 
+                    }
+                }
+            }
+        }
+        return -1; 
+    }
+
+   
+    private void sendMove(int col) throws Exception {
+        Thread.sleep(500); 
+        out.writeObject(col);
+        out.flush();
+    } 
+
+    private void playLoop() {
+        while (true) {
+            try {
+                Rozgrywka game = (Rozgrywka) in.readObject();
+                
+                if (game.isGameFinished() == 1) {
+                    System.out.println("Game finished. Bot disconnecting.");
+                    try {
+                        Thread.sleep(500); 
+                        if (socket != null && !socket.isClosed()) {
+                            socket.close();
+                        }
+                    } catch (Exception ex) {}
+                    break;
+                }
+
+                if (game.getNextPlayer() == botID) {
+                    int selectedCol;
+
+                    selectedCol = checkTrioInRow(game, botID);
+                    if (selectedCol != -1) { sendMove(selectedCol); continue; }
+                    
+                    selectedCol = checkTrioInCol(game, botID);
+                    if (selectedCol != -1) { sendMove(selectedCol); continue; }
+
+                    selectedCol = checkTrioInRow(game, humanID);
+                    if (selectedCol != -1) { sendMove(selectedCol); continue; }
+
+                    selectedCol = checkTrioInCol(game, humanID);
+                    if (selectedCol != -1) { sendMove(selectedCol); continue; }
+
+                    selectedCol = checkPairInCol(game, botID);
+                    if (selectedCol != -1) { sendMove(selectedCol); continue; }
+                    
+                    selectedCol = checkPairInRow(game, botID);
+                    if (selectedCol != -1) { sendMove(selectedCol); continue; }
+                    
+                    do {
+                        selectedCol = (int) (Math.random() * 7);
+                    } while (getDropRow(game, selectedCol) == -1); 
+                    
+                    sendMove(selectedCol);
+                }
+            
+            } catch (Exception e) {
+                System.out.println("Disconnected from server or game finished.");
+                try {
+                    if (socket != null && !socket.isClosed()) {
+                        socket.close();
+                    }
+                } catch (Exception ex) {}
+                break; 
+            }
+        }
+    }
+}
