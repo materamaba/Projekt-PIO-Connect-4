@@ -3,11 +3,11 @@ package org.projekt;
 public class BotTest {
 
     static class TestGame extends Game {
-        public int[][] board = new int[6][7];
+        public int[][] manualBoard = new int[6][7];
 
         @Override
         public int checkDisk(int row, int col, int playerId) {
-            if (board[row][col] == playerId) {
+            if (manualBoard[row][col] == playerId) {
                 return 1; 
             }
             return 0; 
@@ -20,10 +20,14 @@ public class BotTest {
         testEmptyColumn();
         testFullColumn();
         testInvalidColumn();
-                
+        
         testHorizontalTrio();
         testVerticalTrio();
         testGravityTrapAvoidance();
+        
+  
+        testDiagonalTrioDescending();
+        testDiagonalTrioAscending();
         
         System.out.println("--- END OF TESTS ---");
     }
@@ -43,7 +47,7 @@ public class BotTest {
         Bot bot = new Bot();
         TestGame game = new TestGame();
         for (int row = 0; row < 6; row++) {
-            game.board[row][2] = 1;
+            game.manualBoard[row][2] = 1;
         }
         int result = bot.getDropRow(game, 2);
         if (result == -1) {
@@ -63,17 +67,14 @@ public class BotTest {
             System.out.println("[ERROR] testInvalidColumn: Expected -1, but got " + result);
         }
     }
-    
+
     static void testHorizontalTrio() {
         Bot bot = new Bot();
         TestGame game = new TestGame();
-
-        game.board[5][0] = 2;
-        game.board[5][1] = 2;
-        game.board[5][2] = 2;
-
+        game.manualBoard[5][0] = 2;
+        game.manualBoard[5][1] = 2;
+        game.manualBoard[5][2] = 2;
         int result = bot.checkTrioInRow(game, 2);
-
         if (result == 3) {
             System.out.println("[OK] testHorizontalTrio: Bot found the winning spot in a row.");
         } else {
@@ -84,13 +85,10 @@ public class BotTest {
     static void testVerticalTrio() {
         Bot bot = new Bot();
         TestGame game = new TestGame();
-
-        game.board[5][0] = 2;
-        game.board[4][0] = 2;
-        game.board[3][0] = 2;
-
+        game.manualBoard[5][0] = 2;
+        game.manualBoard[4][0] = 2;
+        game.manualBoard[3][0] = 2;
         int result = bot.checkTrioInCol(game, 2);
-
         if (result == 0) {
             System.out.println("[OK] testVerticalTrio: Bot found the winning spot on top of the column.");
         } else {
@@ -101,17 +99,52 @@ public class BotTest {
     static void testGravityTrapAvoidance() {
         Bot bot = new Bot();
         TestGame game = new TestGame();
-
-        game.board[3][0] = 2;
-        game.board[3][1] = 2;
-        game.board[3][2] = 2;
-
+        game.manualBoard[3][0] = 2;
+        game.manualBoard[3][1] = 2;
+        game.manualBoard[3][2] = 2;
         int result = bot.checkTrioInRow(game, 2);
-
         if (result == -1) {
             System.out.println("[OK] testGravityTrapAvoidance: Bot correctly ignored a gravity trap.");
         } else {
             System.out.println("[ERROR] testGravityTrapAvoidance: Expected -1 (trap), but got " + result);
+        }
+    }
+
+    static void testDiagonalTrioDescending() {
+        Bot bot = new Bot();
+        TestGame game = new TestGame();
+
+        game.manualBoard[2][0] = 2;
+        game.manualBoard[3][1] = 2;
+        game.manualBoard[4][2] = 2;
+
+        int result = bot.checkTrioInDiag(game, 2);
+
+        if (result == 3) {
+            System.out.println("[OK] testDiagonalTrioDescending: Bot completed a descending (\\) diagonal.");
+        } else {
+            System.out.println("[ERROR] testDiagonalTrioDescending: Expected column 3, but got " + result);
+        }
+    }
+
+    static void testDiagonalTrioAscending() {
+        Bot bot = new Bot();
+        TestGame game = new TestGame();
+
+        game.manualBoard[5][0] = 2;
+        game.manualBoard[4][1] = 2;
+        game.manualBoard[3][2] = 2;
+
+        game.manualBoard[5][3] = 1;
+        game.manualBoard[4][3] = 1;
+        game.manualBoard[3][3] = 1;
+
+        int result = bot.checkTrioInDiag(game, 2);
+
+        if (result == 3) {
+            System.out.println("[OK] testDiagonalTrioAscending: Bot completed an ascending (/) diagonal with gravity support.");
+        } else {
+            System.out.println("[ERROR] testDiagonalTrioAscending: Expected column 3, but got " + result);
         }
     }
 }
