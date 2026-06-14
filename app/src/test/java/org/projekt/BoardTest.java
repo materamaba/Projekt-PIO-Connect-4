@@ -1,13 +1,12 @@
 package org.projekt;
 
 import static org.junit.jupiter.api.Assertions.fail;
-
 import org.junit.jupiter.api.Test;
 
-public class PlanszaTesty {
+public class BoardTest {
     @Test
      void TestShouldBeEmpty() {
-       Plansza board = new Plansza();
+       Board board = new Board();
        int i = 0;
        while (i<6) {
             int j = 0;
@@ -23,7 +22,7 @@ public class PlanszaTesty {
 
     @Test
     void TestShouldBeInsertedInCorrectColumn() {
-        Plansza board = new Plansza();
+        Board board = new Board();
         try{
             board.insert(7,1);
             fail("Function should throw an exception");
@@ -33,7 +32,7 @@ public class PlanszaTesty {
 
     @Test
     void TestDiscShouldBePlacedAtTheBottom() throws Exception{
-        Plansza board = new Plansza();
+        Board board = new Board();
         board.insert(1,1);
         int i = 0;
         while (i<5) {

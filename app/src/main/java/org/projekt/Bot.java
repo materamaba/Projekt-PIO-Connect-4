@@ -22,14 +22,14 @@ public class Bot {
             socket = new Socket(ip, port);
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-            System.out.println("AI connected.");
+            System.out.println("Bot podłączony.");
             playLoop();
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
 
-    int getDropRow(Rozgrywka game, int col) {
+    int getDropRow(Game game, int col) {
         if (col < 0 || col > 6) {
             return -1; 
         }
@@ -41,7 +41,7 @@ public class Bot {
         return -1; 
     }
 
-    int checkTrioInRow(Rozgrywka game, int playerId) {
+    int checkTrioInRow(Game game, int playerId) {
         for (int row = 0; row < 6; row++) {
             for (int startCol = 0; startCol < 4; startCol++) {
                 int playerDisks = 0;
@@ -70,7 +70,7 @@ public class Bot {
         return -1; 
     }
 
-    int checkTrioInCol(Rozgrywka game, int playerId) {
+    int checkTrioInCol(Game game, int playerId) {
         for (int col = 0; col < 7; col++) {
             for (int startRow = 0; startRow < 3; startRow++) {
                 int playerDisks = 0;
@@ -99,7 +99,7 @@ public class Bot {
         return -1; 
     }
 
-    int checkPairInRow(Rozgrywka game, int playerId) {
+    int checkPairInRow(Game game, int playerId) {
         for (int row = 0; row < 6; row++) {
             for (int startCol = 0; startCol < 4; startCol++) {
                 int playerDisks = 0;
@@ -135,7 +135,7 @@ public class Bot {
         return -1; 
     }
 
-    int checkPairInCol(Rozgrywka game, int playerId) {
+    int checkPairInCol(Game game, int playerId) {
         for (int col = 0; col < 7; col++) {
             for (int startRow = 0; startRow < 3; startRow++) {
                 int playerDisks = 0;
@@ -174,10 +174,10 @@ public class Bot {
     private void playLoop() {
         while (true) {
             try {
-                Rozgrywka game = (Rozgrywka) in.readObject();
+                Game game = (Game) in.readObject();
                 
                 if (game.isGameFinished() != 0) {
-                    System.out.println("Game finished. Bot disconnecting.");
+                    System.out.println("Gra skończona. Bot rozłączony.");
                     try {
                         Thread.sleep(500); 
                         if (socket != null && !socket.isClosed()) {
@@ -216,7 +216,7 @@ public class Bot {
                 }
             
             } catch (Exception e) {
-                System.out.println("Disconnected from server or game finished.");
+                System.out.println("Rozłączono z serwerem lub gra się skończyła.");
                 try {
                     if (socket != null && !socket.isClosed()) {
                         socket.close();

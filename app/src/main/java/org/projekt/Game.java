@@ -2,15 +2,15 @@ package org.projekt;
 
 import java.io.Serializable;
 
-public class Rozgrywka implements Serializable {
-    private Plansza board = new Plansza();
+public class Game implements Serializable {
+    private Board board = new Board();
     private int player = 1;
     private int gameFinished = 0;
     private int moves = 0;
 
     public int makeMove(int col) throws Exception{
         if(gameFinished == 1){
-            throw new Exception("Game is finished");
+            throw new Exception("Gra skończona");
         }
         board.insert(col, player);
         moves++;
@@ -48,7 +48,7 @@ public class Rozgrywka implements Serializable {
     }
 
     public int checkDisk(int row,int col,int player){
-        Krażek disk = board.getDisc(row, col);
+        Disk disk = board.getDisc(row, col);
         if(disk == null){
             return 0;
         }

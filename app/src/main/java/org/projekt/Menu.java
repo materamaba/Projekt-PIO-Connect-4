@@ -11,10 +11,10 @@ import javafx.stage.Stage;
 
 public class Menu {
 	private final Stage stage;
-	private final Klient clientEntity;
+	private final Client clientEntity;
 	private Server activeServer;
 	
-	public Menu(Stage stage, Klient clientInstance) {
+	public Menu(Stage stage, Client clientInstance) {
 		this.stage = stage;
 		this.clientEntity = clientInstance;
 	}
@@ -37,7 +37,7 @@ public class Menu {
 		multiplayerButton.setOnAction(e -> showMultiplayerMenu());
 		botButton.setOnAction(e -> {
 			handleBotGame();
-			clientEntity.setPlayersTeam(Zespol.RED);
+			clientEntity.setPlayersTeam(Team.RED);
 		});
 		VBox layout = new VBox(20, title, multiplayerButton, botButton);
 		style(layout);
@@ -58,16 +58,16 @@ public class Menu {
 		backButton.setStyle("-fx-font-size: 16px;");
 		hostButton.setOnAction(e -> {
 			if (isServerIsAlreadyStarted()){
-				clientEntity.setPlayersTeam(Zespol.YELLOW);
+				clientEntity.setPlayersTeam(Team.YELLOW);
 				clientEntity.initClientLogic("localhost", 1234, null);
 			}else{
-				clientEntity.setPlayersTeam(Zespol.RED);
+				clientEntity.setPlayersTeam(Team.RED);
 				startServerAndGoToHostMenu();
 			}
 		});
 		joinButton.setOnAction(e -> {
 			showJoinMenu();
-			clientEntity.setPlayersTeam(Zespol.YELLOW);
+			clientEntity.setPlayersTeam(Team.YELLOW);
 		});
 		backButton.setOnAction(e -> showMainMenu());
 		VBox layout = new VBox(20, title, hostButton, joinButton, backButton);
@@ -126,7 +126,7 @@ public class Menu {
 				confirmButton.setText("Niepoprawne IP");
 				confirmButton.setStyle("-fx-font-size: 16px; -fx-background-color: #ff4d4d; -fx-text-fill: white;");
 			} else {
-				confirmButton.setText("Łączenie...");
+				confirmButton.setText("Lączenie...");
 				handleJoinServer(ip, confirmButton);
 			}
 		});

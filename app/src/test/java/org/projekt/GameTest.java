@@ -1,12 +1,12 @@
 package org.projekt;
 
+import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
-public class RozgrywkaTest {
+public class GameTest {
     @Test
     void TestMoveAfterWin(){
-        Rozgrywka game = new Rozgrywka();
+        Game game = new Game();
         try{
             game.makeMove(0);
             game.makeMove(1);
@@ -23,7 +23,7 @@ public class RozgrywkaTest {
 
     @Test
     void TestHorizontalWin() throws Exception{
-        Rozgrywka game = new Rozgrywka();
+        Game game = new Game();
         int result = 0;
         result = game.makeMove(0);
         result = game.makeMove(0);
@@ -39,7 +39,7 @@ public class RozgrywkaTest {
 
     @Test
     void TestVerdicalWin() throws Exception{
-        Rozgrywka game = new Rozgrywka();
+        Game game = new Game();
         int result = 0;
         result = game.makeMove(0);
         result = game.makeMove(1);
@@ -55,7 +55,7 @@ public class RozgrywkaTest {
 
     @Test
     void TestDiagonalAscWin() throws Exception{
-        Rozgrywka game = new Rozgrywka();
+        Game game = new Game();
         int result = 0;
         result = game.makeMove(0);
         result = game.makeMove(1);
@@ -75,7 +75,7 @@ public class RozgrywkaTest {
 
     @Test
     void TestDiagonalDescWin() throws Exception{
-        Rozgrywka game = new Rozgrywka();
+        Game game = new Game();
         int result = 0;
         result = game.makeMove(3);
         result = game.makeMove(2);

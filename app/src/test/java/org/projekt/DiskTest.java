@@ -1,15 +1,15 @@
 package org.projekt;
 
+import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
-public class KrażekTest {
+public class DiskTest {
 
     @Test
     void TestCreateDiscWhenIdIsValid() {
         try {
-            new Krażek(1);
-            new Krażek(2);
+            new Disk(1);
+            new Disk(2);
         } catch (Exception error) {
             fail("Constructor should create a correct object");
         }
@@ -18,7 +18,7 @@ public class KrażekTest {
     @Test
     void TestThrowExceptionWhenIdIsInvalid() {
         try {
-            new Krażek(3);
+            new Disk(3);
             fail("Constructor should create a correct object");
         } catch (Exception error) {
         }

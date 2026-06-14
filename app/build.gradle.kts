@@ -40,10 +40,15 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "org.projekt.Klient"
+    mainClass = "org.projekt.Client"
 }
 
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
+    options.compilerArgs.addAll(listOf("-encoding", "UTF-8"))
 }
