@@ -1,18 +1,16 @@
 package org.projekt;
 
+import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.fail;
-
-public class GraczTest {
+public class PlayerTest {
     @Test
     void createNewPlayerTest() {
         try{
-            Gracz player1 = new Gracz(Zespol.RED);
-            Gracz player2 = new Gracz(Zespol.YELLOW);
+            Player player1 = new Player(Team.RED);
+            Player player2 = new Player(Team.YELLOW);
 
-            if(player1.getTeam() != Zespol.RED || player2.getTeam() != Zespol.YELLOW){
+            if(player1.getTeam() != Team.RED || player2.getTeam() != Team.YELLOW){
                 fail("Player1 should have RED team, and player2 YELLOW team");
             }
         }catch(Exception e){
@@ -23,9 +21,9 @@ public class GraczTest {
     @Test
     void samePlayerCantMakeTwoMovesTest() {
         try{
-            Gracz player1 = new Gracz(Zespol.RED);
-            Gracz player2 = new Gracz(Zespol.YELLOW);
-            Rozgrywka game = new Rozgrywka();
+            Player player1 = new Player(Team.RED);
+            Player player2 = new Player(Team.YELLOW);
+            Game game = new Game();
 
             player1.playerMakeMove(game, 0);
             player1.playerMakeMove(game, 1); // this shouldnt do anything
@@ -42,8 +40,8 @@ public class GraczTest {
     @Test
     void yellowTeamCantStartGameTest() {
         try{
-            Gracz player2 = new Gracz(Zespol.YELLOW);
-            Rozgrywka game = new Rozgrywka();
+            Player player2 = new Player(Team.YELLOW);
+            Game game = new Game();
 
             player2.playerMakeMove(game, 0); //this shouldnt do anything
 
@@ -58,10 +56,10 @@ public class GraczTest {
     @Test
     void changeTeamTest() {
         try{
-            Gracz player = new Gracz(Zespol.YELLOW);
-            player.setTeam(Zespol.RED);
+            Player player = new Player(Team.YELLOW);
+            player.setTeam(Team.RED);
 
-            if(player.getTeam() != Zespol.RED){
+            if(player.getTeam() != Team.RED){
                 fail("Player's team should be red");
             }
         }catch(Exception e){

@@ -1,8 +1,5 @@
 package org.projekt;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
-
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -10,12 +7,14 @@ import java.net.Socket;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
-public class KlientTest {
+public class ClientTest {
     @Test
     void connectToBadPortTest() {
         try{
-            Klient client = new Klient();
+            Client client = new Client();
             client.connectToServer("localhost", -1234);
             fail("Client should check port");
         }catch(Exception e){
@@ -26,7 +25,7 @@ public class KlientTest {
     @Test
     void connectToBadIPAddressTest() {
         try{
-            Klient client = new Klient();
+            Client client = new Client();
             client.connectToServer("badIP", 1234);
             fail("Client should ip address");
         }catch(Exception e){
@@ -36,7 +35,7 @@ public class KlientTest {
     
     @Test
     public void testDisconnect() {
-        Klient klient = new Klient();
+        Client klient = new Client();
         
         try {
             klient.disconnect();
@@ -47,7 +46,7 @@ public class KlientTest {
     
     @Test
     public void testNullInsteadOnError() {
-        Klient klient = new Klient();
+        Client klient = new Client();
         
         try {
             klient.initClientLogic("127.0.0.1", 1234, null);
@@ -71,7 +70,7 @@ public class KlientTest {
                 }
             }).start();
 
-            Klient client = new Klient();
+            Client client = new Client();
             client.connectToServer("localhost", activePort);
             client.disconnect();
 

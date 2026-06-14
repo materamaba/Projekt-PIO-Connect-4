@@ -2,7 +2,7 @@ package org.projekt;
 
 public class BotTest {
 
-    static class TestGame extends Rozgrywka {
+    static class TestGame extends Game {
         public int[][] board = new int[6][7];
 
         @Override

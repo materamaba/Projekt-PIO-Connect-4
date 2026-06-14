@@ -8,7 +8,7 @@ import java.net.Socket;
 
 public class Server {
     private ServerSocket serverSocket;
-    private Rozgrywka game;
+    private Game game;
     private final int PORT = 1234;
 
     //Player 1
@@ -44,7 +44,7 @@ public class Server {
             in2 = new ObjectInputStream(socket2.getInputStream());
 
             System.out.println("Obaj gracze połączeni. Rozpoczynamy grę!");
-            game = new Rozgrywka();
+            game = new Game();
             gameStatusRefresh();
             gameLoop();
         }

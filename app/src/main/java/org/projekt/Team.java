@@ -1,6 +1,6 @@
 package org.projekt;
 
-public enum Zespol {
+public enum Team {
     RED,
     YELLOW
 }

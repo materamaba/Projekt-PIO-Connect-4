@@ -1,21 +1,21 @@
 package org.projekt;
 
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.scene.Scene;
-import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
-import javafx.scene.control.Alert;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class Klient extends Application {
-    private Rozgrywka gameFromServer;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
+
+public class Client extends Application {
+    private Game gameFromServer;
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
@@ -25,11 +25,11 @@ public class Klient extends Application {
     private Stage stage;
     private Scene gameScene;
 
-    private Gracz player = new Gracz();
+    private Player player = new Player();
     
     public void connectToServer(String ipAddress, int port) throws Exception {
         if(port < 0 || port > 65535){
-            throw new Exception("Bad port");
+            throw new Exception("zły port");
         }
 
         try {
@@ -38,7 +38,7 @@ public class Klient extends Application {
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
-            throw new Exception("Can't connect to server");
+            throw new Exception("Nie udało się połączyć z serwerem");
         }
     }
 
@@ -46,11 +46,11 @@ public class Klient extends Application {
         new Thread(() -> {
             while (true){
                 try{
-                    gameFromServer = (Rozgrywka) in.readObject();
+                    gameFromServer = (Game) in.readObject();
 
                     Platform.runLater(this::updateDisplayedBoard);
                 }catch(Exception e){
-                    System.out.println("Server disconnected");
+                    System.out.println("Utracono połączenie z serwerem");
 
                     Platform.runLater(() -> {
                         if (gameFromServer != null && gameFromServer.isGameFinished() == 0) {
@@ -62,7 +62,7 @@ public class Klient extends Application {
 
                             disconnect();
                             gameFromServer = null;
-                            new Menu(stage, Klient.this).showMainMenu();
+                            new Menu(stage, Client.this).showMainMenu();
                         }
                     });
                     break;
@@ -137,7 +137,7 @@ public class Klient extends Application {
     public void start(Stage primaryStage) {
     	this.stage = primaryStage;
         primaryStage.setOnCloseRequest(event -> {
-            System.out.println("Game window closed");
+            System.out.println("Zamknięto okno");
             Platform.exit();
             System.exit(0);
         });
@@ -178,11 +178,11 @@ public class Klient extends Application {
             out.writeObject(col);
             out.flush();
         } catch (Exception e) {
-            System.out.println("Cant send move to server");
+            System.out.println("Nie udało się przesłać ruchu");
         }
     }
 
-    public void setPlayersTeam(Zespol team) {
+    public void setPlayersTeam(Team team) {
         player.setTeam(team);
     }
 
