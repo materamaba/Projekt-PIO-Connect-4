@@ -15,13 +15,15 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 public class Client extends Application {
+    public static final int HEIGHT = 6;
+    public static final int WIDTH = 7;
     private Game gameFromServer;
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
     private GridPane gridPane;
-    private Circle[][] circles = new Circle[6][7];
+    private Circle[][] circles = new Circle[HEIGHT][WIDTH];
     private Stage stage;
     private Scene gameScene;
 
@@ -76,8 +78,8 @@ public class Client extends Application {
         if (stage != null && stage.getScene() != gameScene) {
             stage.setScene(gameScene);
         }
-        for (int row = 0; row < 6; row++) {
-            for (int col = 0; col < 7; col++) {
+        for (int row = 0; row < HEIGHT; row++) {
+            for (int col = 0; col < WIDTH; col++) {
                 if (gameFromServer.checkDisk(row, col, 1) == 1) {
                     circles[row][col].setFill(Color.RED);
                 } else if (gameFromServer.checkDisk(row, col, 2) == 1) {
