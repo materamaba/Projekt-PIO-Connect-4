@@ -35,10 +35,10 @@ public class ClientTest {
     
     @Test
     public void testDisconnect() {
-        Client klient = new Client();
+        Client client = new Client();
         
         try {
-            klient.disconnect();
+            client.disconnect();
         } catch (Exception e) {
             fail("Disconnect caused an unexpected error: " + e.getMessage());
         }
@@ -46,10 +46,10 @@ public class ClientTest {
     
     @Test
     public void testNullInsteadOnError() {
-        Client klient = new Client();
+        Client client = new Client();
         
         try {
-            klient.initClientLogic("127.0.0.1", 1234, null);
+            client.initClientLogic("127.0.0.1", 1234, null);
             Thread.sleep(300);
             
         } catch (Exception e) {
