@@ -17,6 +17,12 @@ import javafx.stage.Stage;
 public class Client extends Application {
     public static final int HEIGHT = 6;
     public static final int WIDTH = 7;
+    public static final int MAX_PORT = 65535;
+    public static final int MIN_PORT = 0;
+    public static final int SCENE_WIDTH = 530;
+    public static final int SCENE_HEIGHT = 460;
+    public static final int CIRCLE_RADIUS = 30;
+    public static final int PIXEL_GAP = 12;
     private Game gameFromServer;
     private Socket socket;
     private ObjectInputStream in;
@@ -30,7 +36,7 @@ public class Client extends Application {
     private Player player = new Player();
     
     public void connectToServer(String ipAddress, int port) throws Exception {
-        if(port < 0 || port > 65535){
+        if(port < MIN_PORT || port > MAX_PORT){
             throw new Exception("zły port");
         }
 
@@ -144,7 +150,7 @@ public class Client extends Application {
             System.exit(0);
         });
         initDisplayedBoard();
-        gameScene = new Scene(gridPane, 530, 460);
+        gameScene = new Scene(gridPane, SCENE_WIDTH, SCENE_HEIGHT);
         new Menu(primaryStage, this);
         Menu menu = new Menu(primaryStage, this);
         menu.showMainMenu();
@@ -154,12 +160,12 @@ public class Client extends Application {
     private void initDisplayedBoard() {
         gridPane = new GridPane();
         gridPane.setStyle("-fx-background-color: #0044AA; -fx-padding: 15;");
-        gridPane.setHgap(12);
-        gridPane.setVgap(12);
+        gridPane.setHgap(PIXEL_GAP);
+        gridPane.setVgap(PIXEL_GAP);
 
-        for (int row = 0; row < 6; row++) {
-            for (int col = 0; col < 7; col++) {
-                Circle circle = new Circle(30);
+        for (int row = 0; row < HEIGHT; row++) {
+            for (int col = 0; col < WIDTH; col++) {
+                Circle circle = new Circle(CIRCLE_RADIUS);
                 circle.setFill(Color.WHITE);
                 circles[row][col] = circle;
 

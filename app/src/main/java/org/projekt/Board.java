@@ -3,10 +3,10 @@ import java.io.Serializable;
 
 public class Board implements Serializable {
 	public static final int WIDTH = 7;
-	public static final int HIGHT = 6;
-    private Disk[][] grid = new Disk[HIGHT][WIDTH];
+	public static final int HEIGHT = 6;
+    private Disk[][] grid = new Disk[HEIGHT][WIDTH];
     public void insert(int col, int playerID) throws Exception{
-        if(col < 0 || col > 6){
+        if(col < 0 || col > HEIGHT){
             throw new Exception("Invalid column");
         }
         int i = 5;
